@@ -29,6 +29,18 @@ resource "aws_cognito_user_pool" "user_pool" {
   }
 }
 
+resource "aws_cognito_user_group" "main" {
+  name         = "admin-group"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+  description  = "Administrators group"
+}
+
+resource "aws_cognito_user_group" "main" {
+  name         = "customer-group"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+  description  = "Customers group"
+}
+
 resource "aws_cognito_user_pool_client" "client" {
   name         = var.client_name
   user_pool_id = aws_cognito_user_pool.user_pool.id
