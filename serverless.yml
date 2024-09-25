@@ -1,0 +1,38 @@
+service: fast-food-auth-service
+custom:
+  OAuth:
+    dev: us-east-1_igwln5u0Z
+    prod: sa-east-1_qMO2qJEHC,sa-east-1_pnoIDUZrD
+    olddev: us-east-1_8jMhH1QSE
+  userPoolArns:
+    prod: arn:aws:cognito-idp:sa-east-1:613204114641:userpool/sa-east-1_rOLgCdhLv
+  currentStage: ${opt:stage, 'prod'}
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    OAUTH: ${self:custom.OAuth.${self:custom.currentStage}}
+    LOG_LEVEL: DEBUG
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 
+            - 'cognito-identity:*'
+            - 'cognito-idp:*'
+            - 'cognito-sync:*'
+          Resource: '*'
+
+functions:
+  customTokenGeneration:
+    handler: src/handler/customToken.handler
+    timeout: 30
+    events:
+      - cognitoUserPool:
+          pool: ${self:custom.userPoolArns.${self:custom.currentStage}}
+          trigger: PreTokenGeneration
+
+plugins:
+  - serverless-plugin-typescript
