@@ -11,6 +11,8 @@ resource "aws_cognito_user_pool" "user_pool" {
 
   auto_verified_attributes = ["email"]
 
+  mfa_configuration = "OFF"
+
   schema {
     attribute_data_type      = "String"
     developer_only_attribute = false
@@ -29,18 +31,6 @@ resource "aws_cognito_user_pool" "user_pool" {
   }
 }
 
-resource "aws_cognito_user_group" "admin_group" {
-  name         = "admin-group"
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-  description  = "Administrators group"
-}
-
-resource "aws_cognito_user_group" "customer_group" {
-  name         = "customer-group"
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-  description  = "Customers group"
-}
-
 resource "aws_cognito_user_pool_client" "client" {
   name         = var.client_name
   user_pool_id = aws_cognito_user_pool.user_pool.id
@@ -53,6 +43,18 @@ resource "aws_cognito_user_pool_client" "client" {
   allowed_oauth_scopes      = ["email", "openid"]
   callback_urls             = var.callback_urls
   supported_identity_providers = ["COGNITO"]
+}
+
+resource "aws_cognito_user_group" "admin_group" {
+  name         = "admin-group"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+  description  = "Administrators group"
+}
+
+resource "aws_cognito_user_group" "customer_group" {
+  name         = "customer-group"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
+  description  = "Customers group"
 }
 
 resource "aws_cognito_identity_pool" "identity_pool" {
