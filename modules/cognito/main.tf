@@ -29,13 +29,13 @@ resource "aws_cognito_user_pool" "user_pool" {
   }
 }
 
-resource "aws_cognito_user_group" "main" {
+resource "aws_cognito_user_group" "admin_group" {
   name         = "admin-group"
   user_pool_id = aws_cognito_user_pool.user_pool.id
   description  = "Administrators group"
 }
 
-resource "aws_cognito_user_group" "main" {
+resource "aws_cognito_user_group" "customer_group" {
   name         = "customer-group"
   user_pool_id = aws_cognito_user_pool.user_pool.id
   description  = "Customers group"
