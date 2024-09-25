@@ -4,20 +4,62 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Install Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
+      # Step 4: Initialize Terraform with the remote backend
       - name: Terraform Init
         run: terraform init
 
+      # Step 5: Apply Terraform to create resources
       - name: Terraform Apply
         run: terraform apply -auto-approve
+
+  cleanup:
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'workflow_dispatch' # always() Cleanup always runs, even if the deployment fails. workflow_dispatch is manually
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Step 3: Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      # Step 4: Initialize Terraform with the remote backend
+      - name: Terraform Init
+        run: terraform init
+
+      # Step 5: Destroy Terraform for clean up resources
+      - name: Terraform Destroy (Clean up resources)
+        run: terraform destroy -auto-approve
