@@ -21,13 +21,3 @@ variable "identity_pool_name" {
   type        = string
   default     = "fastfood-identity-pool"
 }
-
-variable "authenticated_role_arn" {
-  description = "Authenticated Role ARN"
-  type        = string
-}
-
-variable "unauthenticated_role_arn" {
-  description = "Unauthenticated Role ARN"
-  type        = string
-}
