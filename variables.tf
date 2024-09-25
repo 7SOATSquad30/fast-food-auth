@@ -7,6 +7,7 @@ variable "aws_region" {
 variable "user_pool_name" {
   description = "Cognito User Pool Name"
   type        = string
+  default     = "fastfood-user-pool"
 }
 
 variable "client_name" {
