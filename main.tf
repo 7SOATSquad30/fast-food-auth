@@ -5,8 +5,8 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "aws-fastfood-terraform-tfstate"
-    key    = "fast-food-auth/${terraform.workspace}/terraform.tfstate"
-    region = var.aws_region
+    key    = "fast-food-auth/terraform.tfstate"
+    region = "us-east-1"
   }
 }
 
