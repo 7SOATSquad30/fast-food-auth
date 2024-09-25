@@ -1,3 +1,4 @@
+# Create a Cognito User Pool
 resource "aws_cognito_user_pool" "user_pool" {
   name = var.user_pool_name
 
@@ -31,6 +32,7 @@ resource "aws_cognito_user_pool" "user_pool" {
   }
 }
 
+# Create a Cognito User Pool Client
 resource "aws_cognito_user_pool_client" "client" {
   name         = var.client_name
   user_pool_id = aws_cognito_user_pool.user_pool.id
@@ -45,18 +47,21 @@ resource "aws_cognito_user_pool_client" "client" {
   supported_identity_providers = ["COGNITO"]
 }
 
+# Create a admin group
 resource "aws_cognito_user_group" "admin_group" {
   name         = "admin-group"
   user_pool_id = aws_cognito_user_pool.user_pool.id
   description  = "Administrators group"
 }
 
+# Create a customer group
 resource "aws_cognito_user_group" "customer_group" {
   name         = "customer-group"
   user_pool_id = aws_cognito_user_pool.user_pool.id
   description  = "Customers group"
 }
 
+# Create a Cognito Identity Pool
 resource "aws_cognito_identity_pool" "identity_pool" {
   identity_pool_name               = var.identity_pool_name
   allow_unauthenticated_identities = false
