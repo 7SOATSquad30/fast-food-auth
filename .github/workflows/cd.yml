@@ -54,9 +54,9 @@ jobs:
     if: github.event.inputs.destroy_flag == 'true'
 
     steps:
-      - name: List files in infra directory
-        run: ls -R ./infra
-            
+      - name: List root directory
+        run: ls -R /home/runner/work/fast-food-auth/fast-food-auth
+
       # Step 4: Initialize Terraform with the remote backend
       - name: Terraform Init
         run: terraform init
