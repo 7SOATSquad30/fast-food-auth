@@ -38,12 +38,12 @@ jobs:
       # Step 4: Initialize Terraform with the remote backend
       - name: Terraform Init
         run: terraform init
-        working-directory: ./infra
+        working-directory: ../infra
 
       # Step 5: Apply Terraform to create resources
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ./infra
+        working-directory: ../infra
 
   destroy:
     runs-on: ubuntu-latest
@@ -54,9 +54,9 @@ jobs:
       # Step 4: Initialize Terraform with the remote backend
       - name: Terraform Init
         run: terraform init
-        working-directory: ./infra
+        working-directory: ../infra
 
       # Step 5: Destroy Terraform for clean up resources
       - name: Terraform Destroy (Clean up resources)
         run: terraform destroy -auto-approve
-        working-directory: ./infra
+        working-directory: ../infra
