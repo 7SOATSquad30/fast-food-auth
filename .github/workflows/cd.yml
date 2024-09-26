@@ -9,7 +9,7 @@ on:
         default: "false"
 
 jobs:
-  prepare:
+  deploy_or_destroy:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,40 +29,17 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: List files in infra directory
-        run: ls -R ./infra
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: prepare
-    if: github.event.inputs.destroy_flag == 'false'
-
-    steps:
       # Step 4: Initialize Terraform with the remote backend
       - name: Terraform Init
         run: terraform init
         working-directory: ${{ github.workspace }}/infra
 
-      # Step 5: Apply Terraform to create resources
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-        working-directory: ${{ github.workspace }}/infra
-
-  destroy:
-    runs-on: ubuntu-latest
-    needs: prepare
-    if: github.event.inputs.destroy_flag == 'true'
-
-    steps:
-      - name: List root directory
-        run: ls -R /home/runner/work/fast-food-auth/fast-food-auth
-
-      # Step 4: Initialize Terraform with the remote backend
-      - name: Terraform Init
-        run: terraform init
-        working-directory: ${{ github.workspace }}/infra
-
-      # Step 5: Destroy Terraform for clean up resources
-      - name: Terraform Destroy (Clean up resources)
-        run: terraform destroy -auto-approve
+      # Step 5: Apply or Destroy based on input flag
+      - name: Terraform Apply or Destroy
+        run: |
+          if [ "${{ github.event.inputs.destroy_flag }}" == "true" ]; then
+            terraform destroy -auto-approve
+          else
+            terraform apply -auto-approve
+          fi
         working-directory: ${{ github.workspace }}/infra
