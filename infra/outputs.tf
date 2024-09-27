@@ -12,3 +12,9 @@ output "cognito_identity_pool_id" {
   description = "ID do Cognito Identity Pool"
   value       = module.cognito.identity_pool_id
 }
+
+# Lambda function ARN
+output "lambda_function_arn" {
+  description = "ARN da função Lambda"
+  value       = module.lambda.lambda_function_arn
+}

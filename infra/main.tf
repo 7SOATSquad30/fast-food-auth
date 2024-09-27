@@ -18,3 +18,9 @@ module "cognito" {
   callback_urls = var.callback_urls
   identity_pool_name = var.identity_pool_name
 }
+
+# Connect the Lambda module
+module "lambda" {
+  source      = "./modules/lambda"
+  lambda_name = var.lambda_name
+}
