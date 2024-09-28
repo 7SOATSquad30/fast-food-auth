@@ -12,10 +12,10 @@ terraform {
 
 # Connect the Cognito module
 module "cognito" {
-  source            = "./modules/cognito"
-  user_pool_name    = var.user_pool_name
-  client_name       = var.client_name
-  callback_urls = var.callback_urls
+  source             = "./modules/cognito"
+  user_pool_name     = var.user_pool_name
+  client_name        = var.client_name
+  callback_urls      = var.callback_urls
   identity_pool_name = var.identity_pool_name
 }
 
@@ -23,4 +23,12 @@ module "cognito" {
 module "lambda" {
   source      = "./modules/lambda"
   lambda_name = var.lambda_name
+}
+
+# Create a Lambda permission
+resource "aws_lambda_permission" "api_gateway_invoke_lambda" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda.lambda_function_arn
+  principal     = "apigateway.amazonaws.com"
 }
