@@ -20,7 +20,7 @@ variable "path_part" {
 }
 
 # Lambda function invoke ARN
-variable "lambda_invoke_arn" {
+variable "lambda_function_invoke_arn" {
   description = "Lambda function Invoke ARN"
   type        = string
 }

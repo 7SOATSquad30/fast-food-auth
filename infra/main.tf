@@ -25,10 +25,24 @@ module "lambda" {
   lambda_name = var.lambda_name
 }
 
+# Connect the API Gateway module
+module "api_gateway" {
+  source                     = "./modules/api_gateway"
+  api_name                   = var.api_name
+  api_description            = var.api_description
+  path_part                  = var.path_part
+  lambda_function_invoke_arn = module.lambda.lambda_function_invoke_arn
+
+  depends_on = [module.lambda]
+}
+
 # Create a Lambda permission
 resource "aws_lambda_permission" "api_gateway_invoke_lambda" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda.lambda_function_arn
   principal     = "apigateway.amazonaws.com"
+  source_arn    = "${module.api_gateway.api_execution_arn}/"
+
+  depends_on = [module.api_gateway]
 }

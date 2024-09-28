@@ -31,7 +31,7 @@ resource "aws_api_gateway_integration" "integration" {
   http_method             = aws_api_gateway_method.method.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.lambda_invoke_arn
+  uri                     = var.lambda_function_invoke_arn
 }
 
 # Create a API Gateway deployment
@@ -40,6 +40,6 @@ resource "aws_api_gateway_deployment" "deployment" {
 
   depends_on = [
     aws_api_gateway_method.method,
-    aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_integration.integration,
   ]
 }
