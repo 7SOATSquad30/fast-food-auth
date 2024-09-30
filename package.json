@@ -1,0 +1,35 @@
+{
+  "name": "custom-token-generation",
+  "version": "1.0.0",
+  "description": "Custom Token Generation",
+  "main": "index.js",
+  "scripts": {
+    "test:local:oauth": "serverless invoke local -f customTokenGeneration --path __payloads/token-oauth.json",
+    "deploy:prd": "serverless deploy --stage prd --region sa-east-1",
+    "clear": "rm -rf .build",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "author": "Davi Oliveira",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.135",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.1.0",
+    "aws-sdk-client-mock": "^4.0.1",
+    "jest": "^29.7.0",
+    "jest-sonar": "^0.2.16",
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.3",
+    "serverless-plugin-typescript": "^2.1.5",
+    "ts-jest": "^29.2.4",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@aws-crypto/client-node": "^4.0.1",
+    "@aws-lambda-powertools/logger": "^2.6.0",
+    "@aws-lambda-powertools/metrics": "^2.6.0",
+    "@aws-lambda-powertools/tracer": "^2.6.0",
+    "aws-lambda": "^1.0.7"
+  }
+}

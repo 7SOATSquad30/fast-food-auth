@@ -1,0 +1,1 @@
+aws cognito-idp update-user-pool --user-pool-id <userpool> --lambda-config "{\"CustomSMSSender\":{\"LambdaArn\":\"<lambda-arn>\",\"LambdaVersion\":\"V1_0\"},\"KMSKeyID\":\"<kms-arn>\"}" --region us-east-1
