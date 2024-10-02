@@ -22,11 +22,11 @@ output "lambda_function_id" {
   value       = module.lambda.lambda_function_id
 }
 
-# # Lambda function ARN
-# output "lambda_function_arn" {
-#   description = "Lambda function ARN"
-#   value       = module.lambda.lambda_function_arn
-# }
+# Lambda function ARN
+output "lambda_function_arn" {
+  description = "Lambda function ARN"
+  value       = module.lambda.lambda_function_arn
+}
 
 # # API Gateway ID
 # output "api_gateway_id" {
