@@ -17,7 +17,7 @@ output "identity_pool_id" {
 }
 
 # Cognito User Pool Domain
-output "user_pool_domain_prefix" {
+output "user_pool_domain" {
   description = "Cognito User Pool Domain"
   value       = aws_cognito_user_pool_domain.user_pool_domain.domain
 }

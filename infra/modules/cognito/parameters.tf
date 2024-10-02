@@ -19,6 +19,13 @@ resource "aws_ssm_parameter" "admin_group" {
   value = aws_cognito_user_group.admin_group.id
 }
 
+# Store the Customer Grou ID in the Parameter Store
+resource "aws_ssm_parameter" "customer_group" {
+  name  = "/cognito/customer_group"
+  type  = "String"
+  value = aws_cognito_user_group.customer_group.id
+}
+
 # Store the Identity Pool ID in the Parameter Store
 resource "aws_ssm_parameter" "identity_pool" {
   name  = "/cognito/identity_pool"
