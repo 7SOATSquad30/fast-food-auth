@@ -47,6 +47,10 @@ resource "aws_cognito_user_pool" "user_pool" {
     }
   }
 
+  lambda_config {
+    pre_token_generation = var.lambda_function_arn
+  }
+
   tags = {
     Name = var.user_pool_name
   }
@@ -94,13 +98,5 @@ resource "aws_cognito_identity_pool" "identity_pool" {
   cognito_identity_providers {
     client_id     = aws_cognito_user_pool_client.client.id
     provider_name = aws_cognito_user_pool.user_pool.endpoint
-  }
-}
-
-# Set up trigger in pool for Lambda
-resource "aws_cognito_user_pool_trigger" "trigger" {
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-  lambda_config {
-    pre_token_generation = var.lambda_function_arn
   }
 }
