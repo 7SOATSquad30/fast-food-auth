@@ -12,6 +12,13 @@ variable "user_pool_name" {
   default     = "fastfood-user-pool"
 }
 
+# Cognito User Pool Domain Prefix
+variable "user_pool_domain_prefix" {
+  description = "Cognito domain prefix"
+  type        = string
+  default     = "fastfood-domain"
+}
+
 # Cognito Cliente name
 variable "client_name" {
   description = "Cognito client name"
