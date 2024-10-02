@@ -1,16 +1,3 @@
-data "aws_iam_policy_document" "assume_role" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
-
 # Create a IAM for Lambda
 resource "aws_iam_role" "iam_for_lambda" {
   name               = "iam_for_lambda"
@@ -33,10 +20,4 @@ resource "aws_lambda_function" "lambda_function" {
   runtime       = var.lambda_runtime
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
-
-  environment {
-    variables = {
-      lambda_function = var.lambda_name
-    }
-  }
 }

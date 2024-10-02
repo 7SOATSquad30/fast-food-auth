@@ -15,3 +15,9 @@ output "identity_pool_id" {
   description = "ID do Identity Pool"
   value       = aws_cognito_identity_pool.identity_pool.id
 }
+
+# Cognito User Pool Domain
+output "user_pool_domain_prefix" {
+  description = "Cognito User Pool Domain"
+  value       = aws_cognito_user_pool_domain.user_pool_domain.domain
+}
