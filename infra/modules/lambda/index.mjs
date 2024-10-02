@@ -7,9 +7,9 @@ export const handler = function(event, context) {
       "idTokenGeneration": {},
       "accessTokenGeneration": {
         "claimsToAddOrOverride": {
-          "cpf": userAttributes['custom:cpfNumber']
+          "cpf": userAttributes['custom:cpf']
         },
-        "scopesToAdd": ["custom:cpfNumber:"]
+        "scopesToAdd": ["custom:cpf"]
       }
     }
   };
