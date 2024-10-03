@@ -74,3 +74,38 @@ variable "path_part" {
   type        = string
   default     = "auth"
 }
+
+# API Gateway name
+variable "api_name" {
+  description = "API Gateway name"
+  type        = string
+  default     = "fastfood-api"
+}
+
+# Stage name
+variable "stage_name" {
+  description = "Stage name"
+  type        = string
+  default     = "$default"
+}
+
+# VPC link name
+variable "vpc_link_name" {
+  description = "VPC link name"
+  type        = string
+  default     = "fastfood-vpc"
+}
+
+# Parameter store VPC
+variable "parameter_store_vpc" {
+  description = "Parameter store VPC"
+  type        = string
+  default     = "/rds/vpc"
+}
+
+# Issuer URL endpoint
+variable "issuer_url_endpoint" {
+  description = "Issuer URL endpoint"
+  type        = string
+  default     = "https://cognito-idp.us-east-1.amazonaws.com/"
+}

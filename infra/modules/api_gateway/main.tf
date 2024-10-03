@@ -1,45 +1,67 @@
-
-# Create a API Gateway REST API
-resource "aws_api_gateway_rest_api" "api" {
-  name        = var.api_name
-  description = var.api_description
+# Retrieve VPC ID from AWS Parameter Store
+data "aws_ssm_parameter" "vpc_id" {
+  name = var.parameter_store_vpc
 }
 
-# Create a API Gateway resource
-resource "aws_api_gateway_resource" "resource" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
-  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
-  path_part   = var.path_part
+# Retrieve Security Group ID from AWS Parameter Store
+data "aws_ssm_parameter" "sg_id" {
+  name = var.parameter_store_sg
 }
 
-# Create a API Gateway method
-resource "aws_api_gateway_method" "method" {
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.resource.id
-  http_method   = "POST"
-  authorization = "NONE"
+# Create VPC Link for HTTP API
+resource "aws_apigatewayv2_vpc_link" "vpc_link" {
+  name               = var.vpc_link_name
+  subnet_ids         = data.aws_vpc.selected.subnet_ids
+  security_group_ids = [data.aws_ssm_parameter.sg_id.value]
+}
 
-  request_parameters = {
-    "method.request.querystring.cpf" = false
+# Create the HTTP API
+resource "aws_apigatewayv2_api" "api" {
+  name          = var.api_name
+  protocol_type = "HTTP"
+}
+
+# Configure Stage
+resource "aws_apigatewayv2_stage" "default_stage" {
+  api_id      = aws_apigatewayv2_api.api.id
+  name        = var.stage_name
+  auto_deploy = true
+}
+
+# JWT Authorizer
+resource "aws_apigatewayv2_authorizer" "jwt_auth" {
+  api_id          = aws_apigatewayv2_api.api.id
+  name            = "jwt-auth"
+  authorizer_type = "JWT"
+
+  jwt_configuration {
+    audience = [var.audience]
+    issuer   = "${var.issuer_url_endpoint}${var.issuer_url_user_pool}"
   }
+
+  identity_sources = ["$request.header.Authorization"]
 }
 
-# Create a API Gateway integration
-resource "aws_api_gateway_integration" "integration" {
-  rest_api_id             = aws_api_gateway_rest_api.api.id
-  resource_id             = aws_api_gateway_resource.resource.id
-  http_method             = aws_api_gateway_method.method.http_method
-  integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = var.lambda_function_invoke_arn
+# Route and Method ANY /{proxy+}
+resource "aws_apigatewayv2_route" "proxy_route" {
+  api_id    = aws_apigatewayv2_api.api.id
+  route_key = "ANY /{proxy+}"
+
+  target = "integrations/${aws_apigatewayv2_integration.private_integration.id}"
+
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.jwt_auth.id
 }
 
-# Create a API Gateway deployment
-resource "aws_api_gateway_deployment" "deployment" {
-  rest_api_id = aws_api_gateway_rest_api.api.id
+# Integration with ALB/NLB
+resource "aws_apigatewayv2_integration" "private_integration" {
+  api_id = aws_apigatewayv2_api.api.id
 
-  depends_on = [
-    aws_api_gateway_method.method,
-    aws_api_gateway_integration.integration,
-  ]
+  integration_type   = "HTTP_PROXY"
+  integration_method = "ANY"
+  integration_uri    = "arn:aws:elasticloadbalancing:us-east-1:${data.aws_ssm_parameter.vpc_id.value}" # ARN do ALB/NLB
+
+  connection_type        = "VPC_LINK"
+  connection_id          = aws_apigatewayv2_vpc_link.vpc_link.id
+  payload_format_version = "1.0"
 }

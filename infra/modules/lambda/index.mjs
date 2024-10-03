@@ -1,6 +1,7 @@
-export const handler = function(event, context) {
+export const handler = function (event, context) {
   // Retrieve user attribute from event request
-  const cpf = event.request.userAttributes['custom:cpf'];
+  const userAttributes = event.request.userAttributes;
+  const cpf = userAttributes["custom:cpf"];
 
   if (cpf) {
     // Add scope to event response
@@ -9,14 +10,14 @@ export const handler = function(event, context) {
         "idTokenGeneration": {},
         "accessTokenGeneration": {
           "claimsToAddOrOverride": {
-            "cpf": userAttributes['custom:cpf']
+            "cpf": cpf,
           },
-          "scopesToAdd": ["custom:cpf"]
-        }
-      }
+          "scopesToAdd": ["custom:cpf:"],
+        },
+      },
     };
   }
-  
+
   // Return to Amazon Cognito
   context.done(null, event);
 };
