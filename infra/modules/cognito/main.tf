@@ -107,54 +107,6 @@ resource "aws_cognito_user_pool_ui_customization" "ui_customization" {
   css          = "/* Custom CSS for Cognito Hosted UI */"
 }
 
-# Create a Cognito Risk Configuration
-resource "aws_cognito_risk_configuration" "risk_configuration" {
-  user_pool_id = aws_cognito_user_pool.user_pool.id
-  client_id    = aws_cognito_user_pool_client.client.id
-
-  compromised_credentials_risk_configuration {
-    actions {
-      event_action = "NO_ACTION"
-    }
-  }
-
-  account_takeover_risk_configuration {
-    actions {
-      low_action {
-        event_action = "NO_ACTION"
-        notify       = false
-      }
-      medium_action {
-        event_action = "NO_ACTION"
-        notify       = false
-      }
-      high_action {
-        event_action = "NO_ACTION"
-        notify       = false
-      }
-    }
-
-    notify_configuration {
-      source_arn = aws_cognito_user_pool.user_pool.arn
-      block_email {
-        subject   = "Account Blocked"
-        html_body = "Your account has been blocked due to suspicious activity."
-        text_body = "Your account has been blocked due to suspicious activity."
-      }
-      mfa_email {
-        subject   = "MFA Verification"
-        html_body = "Your account requires MFA verification."
-        text_body = "Your account requires MFA verification."
-      }
-      no_action_email {
-        subject   = "Account Notification"
-        html_body = "This is a notification of no suspicious activity."
-        text_body = "This is a notification of no suspicious activity."
-      }
-    }
-  }
-}
-
 # Create a Cognito Identity Pool
 resource "aws_cognito_identity_pool" "identity_pool" {
   identity_pool_name               = var.identity_pool_name
