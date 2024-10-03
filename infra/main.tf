@@ -37,7 +37,7 @@ module "api_gateway" {
   vpc_link_name        = var.vpc_link_name
   parameter_store_vpc  = var.parameter_store_vpc
   issuer_url_endpoint  = var.issuer_url_endpoint
-  issuer_url_user_pool = module.cognito.identity_pool_id
+  issuer_url_user_pool = module.cognito.user_pool_id
   audience             = module.cognito.client_id
 
   depends_on = [module.cognito]

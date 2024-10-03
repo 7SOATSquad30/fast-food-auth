@@ -3,6 +3,11 @@ data "aws_ssm_parameter" "vpc_id" {
   name = var.parameter_store_vpc
 }
 
+# Retrieves load_balancer_arn from AWS Parameter Store
+data "aws_ssm_parameter" "load_balancer_arn" {
+  name = ""
+}
+
 # Retrieves subnet_1 from AWS Parameter Store
 data "aws_ssm_parameter" "subnet_1" {
   name = "/rds/subnet_1"
@@ -83,7 +88,7 @@ resource "aws_apigatewayv2_integration" "private_integration" {
 
   integration_type   = "HTTP_PROXY"
   integration_method = "ANY"
-  integration_uri    = "arn:aws:elasticloadbalancing:us-east-1:${data.aws_ssm_parameter.vpc_id.value}" # ARN do ALB/NLB
+  integration_uri    = data.aws_ssm_parameter.load_balancer_arn.value # ARN do ALB/NLB
 
   connection_type        = "VPC_LINK"
   connection_id          = aws_apigatewayv2_vpc_link.vpc_link.id
