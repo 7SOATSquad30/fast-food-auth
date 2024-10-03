@@ -11,7 +11,7 @@ data "aws_ssm_parameter" "sg_id" {
 # Create VPC Link for HTTP API
 resource "aws_apigatewayv2_vpc_link" "vpc_link" {
   name               = var.vpc_link_name
-  subnet_ids         = data.aws_vpc.selected.subnet_ids
+  subnet_ids         = data.aws_ssm_parameter.vpc_id.value
   security_group_ids = [data.aws_ssm_parameter.sg_id.value]
 }
 
