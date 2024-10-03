@@ -5,22 +5,49 @@ variable "api_name" {
   default     = "fastfood-api"
 }
 
-# API Gateway description
-variable "api_description" {
-  description = "API Gateway description"
+# Stage name
+variable "stage_name" {
+  description = "Stage name"
   type        = string
-  default     = "API Gateway for FastFood authentication"
+  default     = "$default"
 }
 
-# API Gateway part path
-variable "path_part" {
-  description = "Path part for the API Gateway resource"
+# VPC link name
+variable "vpc_link_name" {
+  description = "VPC link name"
   type        = string
-  default     = "auth"
+  default     = "fastfood-vpc"
 }
 
-# Lambda function invoke ARN
-variable "lambda_function_invoke_arn" {
-  description = "Lambda function Invoke ARN"
+# Parameter store VPC
+variable "parameter_store_vpc" {
+  description = "Parameter store VPC"
+  type        = string
+  default     = "/rds/vpc"
+}
+
+# Parameter store Security Group
+variable "parameter_store_sg" {
+  description = "Parameter store Security Group"
+  type        = string
+  default     = "default_security_group_id"
+}
+
+# Issuer URL endpoint
+variable "issuer_url_endpoint" {
+  description = "Issuer URL endpoint"
+  type        = string
+  default     = "https://cognito-idp.us-east-1.amazonaws.com/"
+}
+
+# Issuer URL User Pool ID
+variable "issuer_url_user_pool" {
+  description = "Issuer URL User Pool ID"
+  type        = string
+}
+
+# Audience
+variable "audience" {
+  description = "Audience"
   type        = string
 }

@@ -30,12 +30,15 @@ module "cognito" {
 }
 
 # Connect the API Gateway module
-# module "api_gateway" {
-#   source                     = "./modules/api_gateway"
-#   api_name                   = var.api_name
-#   api_description            = var.api_description
-#   path_part                  = var.path_part
-#   lambda_function_invoke_arn = module.lambda.lambda_function_invoke_arn
+module "api_gateway" {
+  source               = "./modules/api_gateway"
+  api_name             = var.api_name
+  stage_name           = var.stage_name
+  vpc_link_name        = var.vpc_link_name
+  parameter_store_vpc  = var.parameter_store_vpc
+  issuer_url_endpoint  = var.issuer_url_endpoint
+  issuer_url_user_pool = module.cognito.identity_pool_id
+  audience             = module.cognito.client_id
 
-#   depends_on = [module.cognito]
-# }
+  depends_on = [module.cognito]
+}
