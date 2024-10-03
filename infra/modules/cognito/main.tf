@@ -135,8 +135,6 @@ resource "aws_cognito_risk_configuration" "risk_configuration" {
     }
 
     notify_configuration {
-      from       = "no-reply@yourdomain.com" # Remetente do e-mail
-      reply_to   = "support@yourdomain.com"  # E-mail de resposta
       source_arn = aws_cognito_user_pool.user_pool.arn
       block_email {
         subject   = "Account Blocked"
