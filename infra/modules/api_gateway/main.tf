@@ -3,6 +3,30 @@ data "aws_ssm_parameter" "vpc_id" {
   name = var.parameter_store_vpc
 }
 
+# Retrieves subnet_1 from AWS Parameter Store
+data "aws_ssm_parameter" "subnet_1" {
+  name = "/rds/subnet_1"
+}
+
+# Retrieves subnet_2 from AWS Parameter Store
+data "aws_ssm_parameter" "subnet_2" {
+  name = "/rds/subnet_2"
+}
+
+# Retrieves subnet_3 from AWS Parameter Store
+data "aws_ssm_parameter" "subnet_3" {
+  name = "/rds/subnet_3"
+}
+
+# Creates a list of subnet IDs
+locals {
+  subnet_ids = [
+    data.aws_ssm_parameter.subnet_1.value,
+    data.aws_ssm_parameter.subnet_2.value,
+    data.aws_ssm_parameter.subnet_3.value,
+  ]
+}
+
 # Retrieve Security Group ID from AWS Parameter Store
 data "aws_ssm_parameter" "sg_id" {
   name = var.parameter_store_sg
@@ -11,7 +35,7 @@ data "aws_ssm_parameter" "sg_id" {
 # Create VPC Link for HTTP API
 resource "aws_apigatewayv2_vpc_link" "vpc_link" {
   name               = var.vpc_link_name
-  subnet_ids         = data.aws_ssm_parameter.vpc_id.value
+  subnet_ids         = local.subnet_ids
   security_group_ids = [data.aws_ssm_parameter.sg_id.value]
 }
 
