@@ -63,6 +63,11 @@ resource "aws_cognito_user_pool" "user_pool" {
     }
   }
 
+  # Advanced Security Features
+  user_pool_add_ons {
+    advanced_security_mode = "AUDIT"
+  }
+
   tags = {
     Name = var.user_pool_name
   }
