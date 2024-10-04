@@ -75,13 +75,6 @@ variable "vpc_link_name" {
   default     = "fastfood-vpc"
 }
 
-# Parameter store VPC
-variable "parameter_store_vpc" {
-  description = "Parameter store VPC"
-  type        = string
-  default     = "/rds/vpc"
-}
-
 # Issuer URL endpoint
 variable "issuer_url_endpoint" {
   description = "Issuer URL endpoint"

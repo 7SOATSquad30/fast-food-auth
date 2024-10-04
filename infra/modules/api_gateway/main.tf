@@ -1,11 +1,11 @@
 # Retrieve VPC ID from AWS Parameter Store
 data "aws_ssm_parameter" "vpc_id" {
-  name = var.parameter_store_vpc
+  name = "/rds/vpc"
 }
 
 # Retrieves load_balancer_arn from AWS Parameter Store
 data "aws_ssm_parameter" "load_balancer_arn" {
-  name = ""
+  name = "/elb/arn"
 }
 
 # Retrieves subnet_1 from AWS Parameter Store
