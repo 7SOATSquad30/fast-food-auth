@@ -19,13 +19,6 @@ variable "vpc_link_name" {
   default     = "fastfood-vpc"
 }
 
-# Parameter store VPC
-variable "parameter_store_vpc" {
-  description = "Parameter store VPC"
-  type        = string
-  default     = "/rds/vpc"
-}
-
 # Parameter store Security Group
 variable "parameter_store_sg" {
   description = "Parameter store Security Group"
