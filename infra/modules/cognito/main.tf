@@ -57,6 +57,10 @@ resource "aws_cognito_user_pool" "user_pool" {
   # Lambda trigger
   lambda_config {
     pre_token_generation = var.lambda_function_arn
+    pre_token_generation_config {
+      lambda_arn     = var.lambda_function_arn
+      lambda_version = "V2_0"
+    }
   }
 
   tags = {
