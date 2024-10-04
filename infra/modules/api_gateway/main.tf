@@ -3,9 +3,9 @@ data "aws_ssm_parameter" "vpc_id" {
   name = "/rds/vpc"
 }
 
-# Retrieves load_balancer_arn from AWS Parameter Store
-data "aws_ssm_parameter" "load_balancer_arn" {
-  name = "/elb/arn"
+# Retrieves load_balancer_listener_arn from AWS Parameter Store
+data "aws_ssm_parameter" "load_balancer_listener_arn" {
+  name = "/elb/listener_arn"
 }
 
 # Retrieves subnet_1 from AWS Parameter Store
@@ -71,6 +71,19 @@ resource "aws_apigatewayv2_authorizer" "jwt_auth" {
   identity_sources = ["$request.header.Authorization"]
 }
 
+# Integration with ALB/NLB
+resource "aws_apigatewayv2_integration" "private_integration" {
+  api_id = aws_apigatewayv2_api.api.id
+
+  integration_type   = "HTTP_PROXY"
+  integration_method = "ANY"
+  integration_uri    = data.aws_ssm_parameter.load_balancer_listener_arn.value # ALB/NLB listener ARN
+
+  connection_type        = "VPC_LINK"
+  connection_id          = aws_apigatewayv2_vpc_link.vpc_link.id
+  payload_format_version = "1.0"
+}
+
 # Route and Method ANY /{proxy+}
 resource "aws_apigatewayv2_route" "proxy_route" {
   api_id    = aws_apigatewayv2_api.api.id
@@ -80,17 +93,4 @@ resource "aws_apigatewayv2_route" "proxy_route" {
 
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.jwt_auth.id
-}
-
-# Integration with ALB/NLB
-resource "aws_apigatewayv2_integration" "private_integration" {
-  api_id = aws_apigatewayv2_api.api.id
-
-  integration_type   = "HTTP_PROXY"
-  integration_method = "ANY"
-  integration_uri    = data.aws_ssm_parameter.load_balancer_arn.value # ARN do ALB/NLB
-
-  connection_type        = "VPC_LINK"
-  connection_id          = aws_apigatewayv2_vpc_link.vpc_link.id
-  payload_format_version = "1.0"
 }
